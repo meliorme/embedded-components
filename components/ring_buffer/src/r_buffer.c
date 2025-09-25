@@ -2,15 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-// static uint16_t get_remain(r_buf_t *_r)
-// {
-//     return ((_r->capacity + _r->w_idx - _r->r_idx) & (_r->capacity - 1));
-// }
-
-// static uint16_t get_avail(r_buf_t *_r)
-// {
-//     return (_r->capacity - get_remain(_r));
-// }
 
 r_buf_t *r_buf_create(uint16_t capacity)
 {
@@ -49,7 +40,7 @@ uint16_t r_buf_write(uint8_t *data, uint16_t length, r_buf_t *_r)
         memcpy(_r->r_buf + _r->w_idx, data, first_len);
         memcpy(_r->r_buf, data + first_len, len_tmp - first_len);
     }
-    _r->w_idx = (_r->w_idx + len_tmp) % _r->capacity;
+    _r->w_idx = (_r->w_idx + len_tmp) & (_r->capacity - 1);
     _r->cur_cnt += len_tmp;
     
     return len_tmp;
@@ -69,7 +60,7 @@ uint16_t r_buf_read(uint8_t *data, uint16_t length, r_buf_t *_r)
         memcpy(data, _r->r_buf + _r->r_idx, first_len);
         memcpy(data + first_len, _r->r_buf, r_len - first_len);
     }
-    _r->r_idx = (_r->r_idx + r_len) % _r->capacity;
+    _r->r_idx = (_r->r_idx + r_len) & (_r->capacity - 1);
     _r->cur_cnt -= r_len;
     
     return r_len;
