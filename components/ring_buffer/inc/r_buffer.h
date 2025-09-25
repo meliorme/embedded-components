@@ -11,6 +11,7 @@ extern "C"
 typedef struct {
     uint8_t *r_buf;
     uint16_t capacity;
+    uint16_t cur_cnt;
     volatile uint16_t r_idx;
     volatile uint16_t w_idx;
 }r_buf_t;
